@@ -123,7 +123,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable')]",
+			"name": "[concat(parameters('factoryName'), '/ds_AzureSqlDatabase')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -157,7 +157,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ColorsCsv')]",
+			"name": "[concat(parameters('factoryName'), '/ds_ColorsCsv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -198,7 +198,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_AzureSQLTable')]",
+			"name": "[concat(parameters('factoryName'), '/ds_AzureSQLWithParam')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -233,7 +233,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_BlobStorage')]",
+			"name": "[concat(parameters('factoryName'), '/ds_BlobStorageWithParam')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -334,7 +334,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "DS_AzureSQLTable",
+											"referenceName": "ds_AzureSQLWithParam",
 											"type": "DatasetReference",
 											"parameters": {
 												"tableName": {
@@ -350,7 +350,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "DS_BlobStorage",
+											"referenceName": "ds_BlobStorageWithParam",
 											"type": "DatasetReference",
 											"parameters": {
 												"tableName": {
@@ -380,8 +380,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_AzureSQLTable')]",
-				"[concat(variables('factoryId'), '/datasets/DS_BlobStorage')]"
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSQLWithParam')]",
+				"[concat(variables('factoryId'), '/datasets/ds_BlobStorageWithParam')]"
 			]
 		},
 		{
@@ -433,14 +433,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ColorsCsv",
+								"referenceName": "ds_ColorsCsv",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlTable",
+								"referenceName": "ds_AzureSqlDatabase",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -454,8 +454,8 @@
 				"lastPublishTime": "2025-05-16T17:00:45Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ColorsCsv')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
+				"[concat(variables('factoryId'), '/datasets/ds_ColorsCsv')]",
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSqlDatabase')]"
 			]
 		},
 		{
@@ -484,7 +484,7 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlTable",
+								"referenceName": "ds_AzureSqlDatabase",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -546,7 +546,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "DS_AzureSQLTable",
+											"referenceName": "ds_AzureSQLWithParam",
 											"type": "DatasetReference",
 											"parameters": {
 												"tableName": {
@@ -562,7 +562,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "DS_BlobStorage",
+											"referenceName": "ds_BlobStorageWithParam",
 											"type": "DatasetReference",
 											"parameters": {
 												"tableName": {
@@ -643,9 +643,9 @@
 				"lastPublishTime": "2025-05-16T17:18:01Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
-				"[concat(variables('factoryId'), '/datasets/DS_AzureSQLTable')]",
-				"[concat(variables('factoryId'), '/datasets/DS_BlobStorage')]",
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/ds_AzureSQLWithParam')]",
+				"[concat(variables('factoryId'), '/datasets/ds_BlobStorageWithParam')]",
 				"[concat(variables('factoryId'), '/pipelines/Child_ExportAllTables')]"
 			]
 		}
