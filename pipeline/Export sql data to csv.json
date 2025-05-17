@@ -22,7 +22,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "AzureSqlTable",
+						"referenceName": "ds_AzureSqlDatabase",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -83,7 +83,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_AzureSQLTable",
+									"referenceName": "ds_AzureSQLWithParam",
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {
@@ -99,7 +99,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DS_BlobStorage",
+									"referenceName": "ds_BlobStorageWithParam",
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {

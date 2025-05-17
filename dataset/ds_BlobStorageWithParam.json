@@ -1,5 +1,5 @@
 {
-	"name": "DS_BlobStorage",
+	"name": "ds_BlobStorageWithParam",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_BlobStorage",

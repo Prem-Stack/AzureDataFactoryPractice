@@ -6,6 +6,7 @@
 				"name": "ForEachTable",
 				"type": "ForEach",
 				"dependsOn": [],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@pipeline().parameters.tableList",
@@ -54,7 +55,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_AzureSQLTable",
+									"referenceName": "ds_AzureSQLWithParam",
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {
@@ -70,7 +71,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DS_BlobStorage",
+									"referenceName": "ds_BlobStorageWithParam",
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {

@@ -45,13 +45,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ColorsCsv",
+						"referenceName": "ds_ColorsCsv",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSqlTable",
+						"referenceName": "ds_AzureSqlDatabase",
 						"type": "DatasetReference"
 					}
 				]

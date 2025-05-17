@@ -1,5 +1,5 @@
 {
-	"name": "ColorsCsv",
+	"name": "ds_ColorsCsv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage",
