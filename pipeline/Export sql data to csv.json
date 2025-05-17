@@ -31,14 +31,9 @@
 			{
 				"name": "ForEachTable",
 				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "GetAllTables",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
@@ -118,6 +113,61 @@
 									}
 								}
 							]
+						}
+					]
+				}
+			},
+			{
+				"name": "IfHasTables",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "GetAllTables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(length(activity('GetAllTables').output.value), 0)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "No Table to Export",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "\"Table list is empty. Check source database.\"",
+								"errorCode": "404"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Execute Child_ExportAllTables Pipeline",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Child_ExportAllTables",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"tableList": {
+										"value": "@activity('GetAllTables').output.value",
+										"type": "Expression"
+									}
+								}
+							}
 						}
 					]
 				}
