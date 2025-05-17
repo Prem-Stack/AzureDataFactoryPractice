@@ -154,6 +154,9 @@
 						"type": "array"
 					}
 				},
+				"folder": {
+					"name": "Azure SQL to CSV Transformation"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -415,6 +418,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Azure SQL to CSV Transformation"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-05-16T17:18:01Z"
