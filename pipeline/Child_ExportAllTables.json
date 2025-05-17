@@ -95,6 +95,9 @@
 				"type": "array"
 			}
 		},
+		"folder": {
+			"name": "Azure SQL to CSV Transformation"
+		},
 		"annotations": []
 	}
 }
