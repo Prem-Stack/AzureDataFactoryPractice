@@ -276,6 +276,115 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Child_ExportAllTables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.tableList",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "ExportTableToCSV",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "DS_AzureSQLTable",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().TABLE_NAME",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().TABLE_SCHEMA",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DS_BlobStorage",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().TABLE_NAME",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().TABLE_SCHEMA",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"tableList": {
+						"type": "array"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_AzureSQLTable')]",
+				"[concat(variables('factoryId'), '/datasets/DS_BlobStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy csv to sqLdb')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -385,14 +494,9 @@
 					{
 						"name": "ForEachTable",
 						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetAllTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
@@ -475,6 +579,61 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "IfHasTables",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "GetAllTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@greater(length(activity('GetAllTables').output.value), 0)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "No Table to Export",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": "\"Table list is empty. Check source database.\"",
+										"errorCode": "404"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Execute Child_ExportAllTables Pipeline",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Child_ExportAllTables",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"tableList": {
+												"value": "@activity('GetAllTables').output.value",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
 					}
 				],
 				"policy": {
@@ -486,7 +645,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/datasets/DS_AzureSQLTable')]",
-				"[concat(variables('factoryId'), '/datasets/DS_BlobStorage')]"
+				"[concat(variables('factoryId'), '/datasets/DS_BlobStorage')]",
+				"[concat(variables('factoryId'), '/pipelines/Child_ExportAllTables')]"
 			]
 		}
 	]
