@@ -20,11 +20,7 @@
 				"name": "RGB",
 				"type": "nvarchar"
 			}
-		],
-		"typeProperties": {
-			"schema": "dbo",
-			"table": "Colors"
-		}
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
