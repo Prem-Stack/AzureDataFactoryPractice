@@ -1,15 +1,24 @@
 {
-	"name": "ds_Blob_ExportedData_SchemaFolder",
+	"name": "ls_Blob_ExportedData_TableFolder",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage",
+			"referenceName": "LS_BlobStorage",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"schemaName": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().schemaName",
+					"type": "Expression"
+				},
 				"container": "export-data"
 			},
 			"columnDelimiter": ",",

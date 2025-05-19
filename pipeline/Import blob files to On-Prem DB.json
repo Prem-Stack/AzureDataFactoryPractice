@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
+				"name": "ForEach All SchemaName folders",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get all folders and files",
+						"activity": "Get all Schema name",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -16,15 +16,39 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get all folders and files').output.childItems",
+						"value": "@activity('Get all Schema name').output.childItems",
 						"type": "Expression"
 					},
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Copy CSV to On-Prem DB",
-							"type": "Copy",
+							"name": "Get SchemaName",
+							"type": "SetVariable",
 							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "schemaName",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Get all Table name",
+							"type": "GetMetadata",
+							"dependsOn": [
+								{
+									"activity": "Get SchemaName",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -34,14 +58,33 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
+								"dataset": {
+									"referenceName": "ls_Blob_ExportedData_TableFolder",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaName": {
+											"value": "@item().schemaName",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"childItems"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							}
 						}
 					]
 				}
 			},
 			{
-				"name": "Get all folders and files",
+				"name": "Get all Schema name",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -54,7 +97,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_Blob_ExportedData",
+						"referenceName": "ds_Blob_ExportedData_SchemaFolder",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -68,8 +111,48 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "ForEach All TableName folders11",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get all Table name').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Get TableName",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tableName",
+								"value": {
+									"value": "@replace(item().name, '.csv', '')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
 			}
 		],
+		"variables": {
+			"schemaName": {
+				"type": "String"
+			},
+			"tableName": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "Copy CSV to On-Prem SQL"
 		},
