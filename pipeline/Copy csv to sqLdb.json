@@ -45,7 +45,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_ColorsCsv",
+						"referenceName": "ds_Blob_ColorsCsv",
 						"type": "DatasetReference"
 					}
 				],

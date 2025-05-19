@@ -1,5 +1,5 @@
 {
-	"name": "Export sql data to csv",
+	"name": "Read all tables data with schema",
 	"properties": {
 		"activities": [
 			{
@@ -99,7 +99,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ds_BlobStorageWithParam",
+									"referenceName": "ds_Blob_StorageWithParam",
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {
@@ -157,7 +157,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "Child_ExportAllTables",
+									"referenceName": "Export All tables to Blob",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
