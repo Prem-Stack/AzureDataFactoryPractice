@@ -1,5 +1,5 @@
 {
-	"name": "Read all tables data with schema",
+	"name": "A Read all tables data with schema",
 	"properties": {
 		"activities": [
 			{
@@ -157,7 +157,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "Export All tables to Blob",
+									"referenceName": "B Export All tables to Blob",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -170,6 +170,22 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Stage 2 - Export All tables to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "B Export All tables to Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
