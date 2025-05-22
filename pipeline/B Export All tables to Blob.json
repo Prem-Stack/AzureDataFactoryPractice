@@ -92,14 +92,9 @@
 			{
 				"name": "Execute CopyCsvToOnPremDb",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEachTable",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},

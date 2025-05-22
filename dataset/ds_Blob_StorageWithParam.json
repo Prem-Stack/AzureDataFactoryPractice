@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat(dataset().tableName,'.csv')",
+					"value": "@concat(dataset().tableName,'.parquet')",
 					"type": "Expression"
 				},
 				"folderPath": {
