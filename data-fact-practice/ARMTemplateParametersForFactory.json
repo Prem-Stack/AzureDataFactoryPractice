@@ -17,6 +17,9 @@
 		"LS_BlobStorage_connectionString": {
 			"value": ""
 		},
+		"ls_AzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
 		"ls_OnPremSQL_password": {
 			"value": ""
 		},
@@ -37,6 +40,9 @@
 		},
 		"LS_AzureSQL_properties_typeProperties_userName": {
 			"value": "adminuser"
+		},
+		"ls_AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://storageadlspractice.dfs.core.windows.net/"
 		},
 		"ls_OnPremSQL_properties_typeProperties_server": {
 			"value": "LAPTOP-LSK9B8K6\\SQLEXPRESS"

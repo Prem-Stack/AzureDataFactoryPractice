@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_BlobStorage'"
 		},
+		"ls_AzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_AzureDataLakeStorage'"
+		},
 		"ls_OnPremSQL_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_OnPremSQL'"
@@ -50,6 +54,10 @@
 		"LS_AzureSQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "adminuser"
+		},
+		"ls_AzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageadlspractice.dfs.core.windows.net/"
 		},
 		"ls_OnPremSQL_properties_typeProperties_server": {
 			"type": "string",
@@ -102,6 +110,9 @@
 					"LS_BlobStorage_connectionString": {
 						"value": "[parameters('LS_BlobStorage_connectionString')]"
 					},
+					"ls_AzureDataLakeStorage_accountKey": {
+						"value": "[parameters('ls_AzureDataLakeStorage_accountKey')]"
+					},
 					"ls_OnPremSQL_password": {
 						"value": "[parameters('ls_OnPremSQL_password')]"
 					},
@@ -122,6 +133,9 @@
 					},
 					"LS_AzureSQL_properties_typeProperties_userName": {
 						"value": "[parameters('LS_AzureSQL_properties_typeProperties_userName')]"
+					},
+					"ls_AzureDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('ls_AzureDataLakeStorage_properties_typeProperties_url')]"
 					},
 					"ls_OnPremSQL_properties_typeProperties_server": {
 						"value": "[parameters('ls_OnPremSQL_properties_typeProperties_server')]"

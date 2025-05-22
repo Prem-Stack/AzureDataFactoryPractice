@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_BlobStorage'"
 		},
+		"ls_AzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_AzureDataLakeStorage'"
+		},
 		"ls_OnPremSQL_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_OnPremSQL'"
@@ -50,6 +54,10 @@
 		"LS_AzureSQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "adminuser"
+		},
+		"ls_AzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageadlspractice.dfs.core.windows.net/"
 		},
 		"ls_OnPremSQL_properties_typeProperties_server": {
 			"type": "string",
@@ -208,14 +216,12 @@
 											"partitionOption": "None"
 										},
 										"sink": {
-											"type": "DelimitedTextSink",
+											"type": "ParquetSink",
 											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
+												"type": "AzureBlobFSWriteSettings"
 											},
 											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
+												"type": "ParquetWriteSettings"
 											}
 										},
 										"enableStaging": false,
@@ -246,41 +252,19 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "ds_Blob_StorageWithParam",
+											"referenceName": "ds_ADLS_Parquet",
 											"type": "DatasetReference",
 											"parameters": {
-												"tableName": {
-													"value": "@item().TABLE_NAME",
-													"type": "Expression"
-												},
 												"schemaName": {
 													"value": "@item().TABLE_SCHEMA",
 													"type": "Expression"
-												}
+												},
+												"tableName": "@item().TABLE_NAME"
 											}
 										}
 									]
 								}
 							]
-						}
-					},
-					{
-						"name": "Execute CopyCsvToOnPremDb",
-						"type": "ExecutePipeline",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Import blob files to On-Prem DB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
 						}
 					}
 				],
@@ -298,9 +282,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Import blob files to On-Prem DB')]",
 				"[concat(variables('factoryId'), '/datasets/ds_AzureSQLWithParam')]",
-				"[concat(variables('factoryId'), '/datasets/ds_Blob_StorageWithParam')]"
+				"[concat(variables('factoryId'), '/datasets/ds_ADLS_Parquet')]"
 			]
 		},
 		{
@@ -516,6 +499,46 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_Blob_ExportedData_SchemaFolder')]",
 				"[concat(variables('factoryId'), '/datasets/ls_Blob_ExportedData_TableFolder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_ADLS_Parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schemaName": {
+						"type": "string"
+					},
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().tableName,'.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().schemaName",
+							"type": "Expression"
+						},
+						"fileSystem": "source"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureDataLakeStorage')]"
 			]
 		},
 		{
@@ -874,6 +897,23 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('LS_BlobStorage_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_AzureDataLakeStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_AzureDataLakeStorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_AzureDataLakeStorage_accountKey')]"
+					}
 				}
 			},
 			"dependsOn": []
