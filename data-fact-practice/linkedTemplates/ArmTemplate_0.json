@@ -589,7 +589,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "raw"
+						"container": "bronze"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
