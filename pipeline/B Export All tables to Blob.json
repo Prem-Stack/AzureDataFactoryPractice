@@ -33,14 +33,13 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
+									"type": "ParquetSink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobFSWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
 									},
 									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
+										"type": "ParquetWriteSettings"
 									}
 								},
 								"enableStaging": false,
@@ -71,17 +70,14 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ds_Blob_StorageWithParam",
+									"referenceName": "ds_ADLS_Parquet",
 									"type": "DatasetReference",
 									"parameters": {
-										"tableName": {
-											"value": "@item().TABLE_NAME",
-											"type": "Expression"
-										},
 										"schemaName": {
 											"value": "@item().TABLE_SCHEMA",
 											"type": "Expression"
-										}
+										},
+										"tableName": "@item().TABLE_NAME"
 									}
 								}
 							]
