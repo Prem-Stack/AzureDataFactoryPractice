@@ -17,6 +17,9 @@
 		"LS_BlobStorage_connectionString": {
 			"value": ""
 		},
+		"ls_OnPremSQL_password": {
+			"value": ""
+		},
 		"AzureSqlDatabase_properties_typeProperties_server": {
 			"value": "azure-sqlserver-practice.database.windows.net"
 		},
@@ -34,6 +37,15 @@
 		},
 		"LS_AzureSQL_properties_typeProperties_userName": {
 			"value": "adminuser"
+		},
+		"ls_OnPremSQL_properties_typeProperties_server": {
+			"value": "LAPTOP-LSK9B8K6\\SQLEXPRESS"
+		},
+		"ls_OnPremSQL_properties_typeProperties_database": {
+			"value": "Columbus"
+		},
+		"ls_OnPremSQL_properties_typeProperties_userName": {
+			"value": "prem"
 		}
 	}
 }
