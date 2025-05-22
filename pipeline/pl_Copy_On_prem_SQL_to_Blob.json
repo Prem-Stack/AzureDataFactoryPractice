@@ -1,9 +1,9 @@
 {
-	"name": "Copy csv to sqLdb",
+	"name": "pl_Copy_On_prem_SQL_to_Blob",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy csv to Azure SQL",
+				"name": "Copy data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -16,22 +16,20 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -45,23 +43,21 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_Blob_ColorsCsv",
+						"referenceName": "ds_OnPremSqlServerPizzaSales",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_AzureSqlDatabase",
+						"referenceName": "ds_Blob_Raw",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
 		"folder": {
-			"name": "Test"
+			"name": "Pizza Sales"
 		},
-		"annotations": [],
-		"lastPublishTime": "2025-05-16T17:00:45Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
