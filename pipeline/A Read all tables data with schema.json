@@ -29,95 +29,6 @@
 				}
 			},
 			{
-				"name": "ForEachTable",
-				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('GetAllTables').output.value",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "ExportTableToCSV",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
-									}
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "ds_AzureSQLWithParam",
-									"type": "DatasetReference",
-									"parameters": {
-										"tableName": {
-											"value": "@item().TABLE_NAME",
-											"type": "Expression"
-										},
-										"schemaName": {
-											"value": "@item().TABLE_SCHEMA",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "ds_Blob_StorageWithParam",
-									"type": "DatasetReference",
-									"parameters": {
-										"tableName": {
-											"value": "@item().TABLE_NAME",
-											"type": "Expression"
-										},
-										"schemaName": {
-											"value": "@item().TABLE_SCHEMA",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					]
-				}
-			},
-			{
 				"name": "IfHasTables",
 				"type": "IfCondition",
 				"dependsOn": [
@@ -170,22 +81,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Stage 2 - Export All tables to Blob",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"policy": {
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "B Export All tables to Blob",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
 				}
 			}
 		],
