@@ -23,6 +23,9 @@
 		"ls_OnPremSQL_password": {
 			"value": ""
 		},
+		"ls_OnPremSqlServerPizzaSales_password": {
+			"value": ""
+		},
 		"AzureSqlDatabase_properties_typeProperties_server": {
 			"value": "azure-sqlserver-practice.database.windows.net"
 		},
@@ -51,6 +54,15 @@
 			"value": "Columbus"
 		},
 		"ls_OnPremSQL_properties_typeProperties_userName": {
+			"value": "prem"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_server": {
+			"value": "LAPTOP-LSK9B8K6\\SQLEXPRESS"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_database": {
+			"value": "sales"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_userName": {
 			"value": "prem"
 		},
 		"containerUri": {

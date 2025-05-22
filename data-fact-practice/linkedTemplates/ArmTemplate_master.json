@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_OnPremSQL'"
 		},
+		"ls_OnPremSqlServerPizzaSales_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_OnPremSqlServerPizzaSales'"
+		},
 		"AzureSqlDatabase_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "azure-sqlserver-practice.database.windows.net"
@@ -68,6 +72,18 @@
 			"defaultValue": "Columbus"
 		},
 		"ls_OnPremSQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "prem"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "LAPTOP-LSK9B8K6\\SQLEXPRESS"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sales"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "prem"
 		},
@@ -116,6 +132,9 @@
 					"ls_OnPremSQL_password": {
 						"value": "[parameters('ls_OnPremSQL_password')]"
 					},
+					"ls_OnPremSqlServerPizzaSales_password": {
+						"value": "[parameters('ls_OnPremSqlServerPizzaSales_password')]"
+					},
 					"AzureSqlDatabase_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlDatabase_properties_typeProperties_server')]"
 					},
@@ -145,10 +164,39 @@
 					},
 					"ls_OnPremSQL_properties_typeProperties_userName": {
 						"value": "[parameters('ls_OnPremSQL_properties_typeProperties_userName')]"
+					},
+					"ls_OnPremSqlServerPizzaSales_properties_typeProperties_server": {
+						"value": "[parameters('ls_OnPremSqlServerPizzaSales_properties_typeProperties_server')]"
+					},
+					"ls_OnPremSqlServerPizzaSales_properties_typeProperties_database": {
+						"value": "[parameters('ls_OnPremSqlServerPizzaSales_properties_typeProperties_database')]"
+					},
+					"ls_OnPremSqlServerPizzaSales_properties_typeProperties_userName": {
+						"value": "[parameters('ls_OnPremSqlServerPizzaSales_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "data-fact-practice_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'data-fact-practice_ArmTemplate_0')]"
+			]
 		}
 	]
 }

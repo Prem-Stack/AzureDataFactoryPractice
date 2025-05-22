@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_OnPremSQL'"
 		},
+		"ls_OnPremSqlServerPizzaSales_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_OnPremSqlServerPizzaSales'"
+		},
 		"AzureSqlDatabase_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "azure-sqlserver-practice.database.windows.net"
@@ -68,6 +72,18 @@
 			"defaultValue": "Columbus"
 		},
 		"ls_OnPremSQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "prem"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "LAPTOP-LSK9B8K6\\SQLEXPRESS"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sales"
+		},
+		"ls_OnPremSqlServerPizzaSales_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "prem"
 		}
@@ -351,6 +367,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Test"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-05-16T17:00:45Z"
@@ -955,6 +974,211 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_Copy_On_prem_SQL_to_Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_OnPremSqlServerPizzaSales",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_Blob_Raw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Pizza Sales"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_OnPremSqlServerPizzaSales')]",
+				"[concat(variables('factoryId'), '/datasets/ds_Blob_Raw')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_OnPremSqlServerPizzaSales')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('ls_OnPremSqlServerPizzaSales_properties_typeProperties_server')]",
+					"database": "[parameters('ls_OnPremSqlServerPizzaSales_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_OnPremSqlServerPizzaSales_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_OnPremSqlServerPizzaSales_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "OnPremIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/OnPremIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_OnPremSqlServerPizzaSales')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_OnPremSqlServerPizzaSales",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "order_details_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "order_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "pizza_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "quantity",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "order_date",
+						"type": "date"
+					},
+					{
+						"name": "order_time",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "unit_price",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "total_price",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "pizza_size",
+						"type": "nvarchar"
+					},
+					{
+						"name": "pizza_category",
+						"type": "nvarchar"
+					},
+					{
+						"name": "pizza_ingredients",
+						"type": "nvarchar"
+					},
+					{
+						"name": "pizza_name",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "pizza_sales"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_OnPremSqlServerPizzaSales')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_Blob_Raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "raw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
 		}
 	]
 }
