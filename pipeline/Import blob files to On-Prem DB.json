@@ -73,6 +73,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -105,43 +106,12 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings"
 					}
-				}
-			},
-			{
-				"name": "ForEach All TableName folders11",
-				"type": "ForEach",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Get all Table name').output.childItems",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "Get TableName",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "tableName",
-								"value": {
-									"value": "@replace(item().name, '.csv', '')",
-									"type": "Expression"
-								}
-							}
-						}
-					]
 				}
 			}
 		],
